@@ -19,7 +19,9 @@ class RegistrationResource extends JsonResource
             'status' => $this->status->value,
             'workshop' => $this->whenLoaded('workshop', fn () => [
                 'id' => $this->workshop->id,
+                'code' => $this->workshop->code,
                 'title' => $this->workshop->title,
+                'instructor' => $this->workshop->instructor,
                 'starts_at' => $this->workshop->starts_at?->toIso8601String(),
                 'location' => $this->workshop->location,
             ]),

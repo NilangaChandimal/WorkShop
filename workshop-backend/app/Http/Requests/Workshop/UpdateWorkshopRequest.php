@@ -16,7 +16,15 @@ class UpdateWorkshopRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'code' => [
+                'sometimes',
+                'nullable',
+                'string',
+                'max:50',
+                Rule::unique('workshops', 'code')->ignore($this->route('workshop')),
+            ],
             'title' => ['sometimes', 'required', 'string', 'max:255'],
+            'instructor' => ['sometimes', 'nullable', 'string', 'max:255'],
             'description' => ['sometimes', 'nullable', 'string', 'max:5000'],
             'location' => ['sometimes', 'nullable', 'string', 'max:255'],
             'starts_at' => ['sometimes', 'required', 'date', 'after:now'],

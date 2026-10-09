@@ -15,7 +15,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 #[Fillable([
+    'code',
     'title',
+    'instructor',
     'description',
     'location',
     'starts_at',
@@ -123,6 +125,8 @@ class Workshop extends Model
             ->when($filters['search'] ?? null, function (Builder $q, string $search) {
                 $q->where(function (Builder $inner) use ($search) {
                     $inner->where('title', 'like', "%{$search}%")
+                        ->orWhere('code', 'like', "%{$search}%")
+                        ->orWhere('instructor', 'like', "%{$search}%")
                         ->orWhere('location', 'like', "%{$search}%");
                 });
             })

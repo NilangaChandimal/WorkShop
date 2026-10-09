@@ -27,7 +27,9 @@ class DatabaseSeeder extends Seeder
             ->create(['created_by' => $manager->id, 'updated_by' => $manager->id]);
 
         $nearlyFull = Workshop::factory()->capacity(3)->create([
+            'code' => 'WS-101',
             'title' => 'Excel for Beginners',
+            'instructor' => 'Dr. Alan Turing',
             'created_by' => $manager->id,
             'updated_by' => $manager->id,
         ]);

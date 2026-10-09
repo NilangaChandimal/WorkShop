@@ -12,7 +12,9 @@ class WorkshopResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'code' => $this->code,
             'title' => $this->title,
+            'instructor' => $this->instructor,
             'description' => $this->description,
             'location' => $this->location,
             'starts_at' => $this->starts_at?->toIso8601String(),

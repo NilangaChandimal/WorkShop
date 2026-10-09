@@ -17,6 +17,7 @@ class WorkshopFactory extends Factory
         $startsAt->setTime((int) fake()->randomElement([9, 10, 13, 14, 18]), 0);
 
         return [
+            'code' => 'WS-'.fake()->unique()->numerify('###'),
             'title' => fake()->randomElement([
                 'Intro to Computers',
                 'Basic Bookkeeping',
@@ -27,6 +28,7 @@ class WorkshopFactory extends Factory
                 'Public Speaking',
                 'Personal Budgeting',
             ]),
+            'instructor' => fake()->name(),
             'description' => fake()->sentence(16),
             'location' => fake()->randomElement(['Room A', 'Room B', 'Main Hall', 'Computer Lab']),
             'starts_at' => $startsAt,
