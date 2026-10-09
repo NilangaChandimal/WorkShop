@@ -25,22 +25,22 @@ export default function ConfirmDialog({
 }: ConfirmDialogProps) {
   return (
     <Modal open={open} onClose={onClose} title={title} maxWidth="max-w-md">
-      <p className="text-muted text-sm mb-6">{message}</p>
+      <p className="text-slate-600 text-sm mb-6 leading-relaxed">{message}</p>
       <div className="flex justify-end gap-3">
         <button
           onClick={onClose}
           disabled={loading}
-          className="px-4 py-2 text-sm rounded-xl border border-border hover:bg-surface-hover transition-colors"
+          className="px-4 py-2 text-sm rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 transition-colors"
         >
           Cancel
         </button>
         <button
           onClick={onConfirm}
           disabled={loading}
-          className={`px-4 py-2 text-sm rounded-xl font-medium text-white transition-colors disabled:opacity-50 ${
+          className={`px-4 py-2 text-sm rounded-xl font-medium text-white transition-colors disabled:opacity-50 shadow-sm ${
             variant === "danger"
-              ? "bg-danger hover:bg-danger-hover"
-              : "bg-primary hover:bg-primary-hover"
+              ? "bg-rose-600 hover:bg-rose-700 shadow-rose-600/20"
+              : "bg-indigo-600 hover:bg-indigo-700 shadow-indigo-600/20"
           }`}
         >
           {loading ? "Please wait…" : confirmText}

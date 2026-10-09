@@ -109,10 +109,13 @@ class Workshop extends Model
             ->whereColumn('registrations.workshop_id', 'workshops.id')
             ->where('registrations.status', RegistrationStatus::Active->value);
 
-        $query->whereRaw(
-            'workshops.capacity - ('.$activeCount->toSql().') >= ?',
-            [...$activeCount->getBindings(), max(1, $minimum)]
-        );
+        $query
+            ->where('workshops.status', WorkshopStatus::Scheduled->value)
+            ->where('workshops.starts_at', '>', now())
+            ->whereRaw(
+                'workshops.capacity - ('.$activeCount->toSql().') >= ?',
+                [...$activeCount->getBindings(), max(1, $minimum)]
+            );
     }
 
     /**

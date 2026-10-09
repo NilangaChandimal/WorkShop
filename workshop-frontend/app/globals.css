@@ -19,46 +19,35 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Enforce uniform Light Theme across all OS and browsers */
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --surface: #ffffff;
-  --surface-hover: #f1f5f9;
-  --border-color: #e2e8f0;
-  --muted: #64748b;
-  --primary: #6366f1;
-  --primary-hover: #4f46e5;
+  color-scheme: light;
+  --background: #f8fafc; /* slate-50 */
+  --foreground: #1e293b; /* slate-800 */
+  --surface: #ffffff;    /* pure white */
+  --surface-hover: #f1f5f9; /* slate-100 */
+  --border-color: #e2e8f0; /* slate-200 */
+  --muted: #64748b;        /* slate-500 */
+  --primary: #4f46e5;      /* indigo-600 */
+  --primary-hover: #4338ca;/* indigo-700 */
   --primary-text: #ffffff;
-  --danger: #ef4444;
-  --danger-hover: #dc2626;
-  --success: #22c55e;
-  --warning: #f59e0b;
-  --accent: #8b5cf6;
+  --danger: #ef4444;       /* red-500 */
+  --danger-hover: #dc2626; /* red-600 */
+  --success: #16a34a;      /* emerald-600 */
+  --warning: #d97706;      /* amber-600 */
+  --accent: #6366f1;       /* indigo-500 */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0b1120;
-    --foreground: #e2e8f0;
-    --surface: #1e293b;
-    --surface-hover: #334155;
-    --border-color: #334155;
-    --muted: #94a3b8;
-    --primary: #818cf8;
-    --primary-hover: #6366f1;
-    --primary-text: #0f172a;
-    --danger: #f87171;
-    --danger-hover: #ef4444;
-    --success: #4ade80;
-    --warning: #fbbf24;
-    --accent: #a78bfa;
-  }
+html {
+  color-scheme: light !important;
+  background-color: #f8fafc;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans, system-ui, sans-serif);
+  color-scheme: light !important;
+  background-color: #f8fafc;
+  color: #1e293b;
+  font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -76,8 +65,8 @@ button, a, input, select, textarea {
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
 /* Toast animation */
 @keyframes toast-in {

@@ -9,7 +9,7 @@ export default function EmptyState({ title, message, icon }: EmptyStateProps) {
     <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
       {icon ?? (
         <svg
-          className="h-12 w-12 text-muted/40 mb-4"
+          className="h-12 w-12 text-slate-300 mb-4"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -22,8 +22,8 @@ export default function EmptyState({ title, message, icon }: EmptyStateProps) {
           />
         </svg>
       )}
-      <h3 className="text-sm font-semibold text-foreground">{title}</h3>
-      {message && <p className="mt-1 text-sm text-muted">{message}</p>}
+      <h3 className="text-sm font-semibold text-slate-800">{title}</h3>
+      {message && <p className="mt-1 text-sm text-slate-500">{message}</p>}
     </div>
   );
 }

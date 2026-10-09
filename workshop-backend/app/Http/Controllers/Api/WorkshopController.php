@@ -48,15 +48,21 @@ class WorkshopController extends Controller
         return WorkshopResource::collection($workshops);
     }
 
-    public function show(Workshop $workshop): WorkshopResource
+    public function show(Workshop|int|string $workshop = null, $id = null): WorkshopResource
     {
-        Gate::authorize('view', $workshop);
+        $model = ($workshop instanceof Workshop) ? $workshop : null;
+        if (! $model) {
+            $val = $workshop ?? $id;
+            $model = Workshop::findOrFail($val);
+        }
 
-        $workshop->loadCount([
+        Gate::authorize('view', $model);
+
+        $model->loadCount([
             'registrations as active_registrations_count' => fn ($q) => $q->where('status', 'active'),
         ]);
 
-        return new WorkshopResource($workshop);
+        return new WorkshopResource($model);
     }
 
     public function store(StoreWorkshopRequest $request): JsonResponse
@@ -78,14 +84,20 @@ class WorkshopController extends Controller
             ->setStatusCode(Response::HTTP_CREATED);
     }
 
-    public function update(UpdateWorkshopRequest $request, Workshop $workshop): WorkshopResource
+    public function update(UpdateWorkshopRequest $request, Workshop|int|string $workshop = null, $id = null): WorkshopResource
     {
-        Gate::authorize('update', $workshop);
+        $model = ($workshop instanceof Workshop) ? $workshop : null;
+        if (! $model) {
+            $val = $workshop ?? $id;
+            $model = Workshop::findOrFail($val);
+        }
+
+        Gate::authorize('update', $model);
 
         $data = $request->validated();
 
-        DB::transaction(function () use ($workshop, $data, $request) {
-            $locked = Workshop::whereKey($workshop->getKey())->lockForUpdate()->firstOrFail();
+        DB::transaction(function () use ($model, $data, $request) {
+            $locked = Workshop::whereKey($model->getKey())->lockForUpdate()->firstOrFail();
 
             if (isset($data['capacity']) && $data['capacity'] < $locked->active_registrations_count) {
                 abort(Response::HTTP_UNPROCESSABLE_ENTITY, 'Cannot reduce capacity below the number of active registrations ('.$locked->active_registrations_count.').');
@@ -96,13 +108,13 @@ class WorkshopController extends Controller
                 'updated_by' => $request->user()->id,
             ]);
 
-            $workshop->refresh();
+            $model->refresh();
         });
 
-        $workshop->loadCount([
+        $model->loadCount([
             'registrations as active_registrations_count' => fn ($q) => $q->where('status', 'active'),
         ]);
 
-        return new WorkshopResource($workshop);
+        return new WorkshopResource($model);
     }
 }

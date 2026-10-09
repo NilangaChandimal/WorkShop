@@ -11,26 +11,22 @@ Route::post('/login', [AuthController::class, 'login'])
     ->name('login');
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::middleware('role:admin,manager,staff')->group(function () {
-        Route::get('/me', [AuthController::class, 'me']);
-        Route::post('/logout', [AuthController::class, 'logout']);
-    });
+    Route::get('/me', [AuthController::class, 'me']);
+    Route::post('/logout', [AuthController::class, 'logout']);
 
+    // Admin user management
     Route::middleware('role:admin')->group(function () {
         Route::apiResource('users', UserController::class)->except(['destroy']);
     });
 
-    Route::middleware('role:manager,staff')->group(function () {
-        Route::get('/workshops', [WorkshopController::class, 'index']);
-        Route::get('/workshops/{workshop}', [WorkshopController::class, 'show']);
+    // Workshops
+    Route::get('/workshops', [WorkshopController::class, 'index']);
+    Route::get('/workshops/{id}', [WorkshopController::class, 'show']);
+    Route::post('/workshops', [WorkshopController::class, 'store']);
+    Route::put('/workshops/{id}', [WorkshopController::class, 'update']);
 
-        Route::get('/registrations', [RegistrationController::class, 'index']);
-        Route::post('/workshops/{workshop}/registrations', [RegistrationController::class, 'store']);
-        Route::patch('/registrations/{registration}/cancel', [RegistrationController::class, 'cancel']);
-    });
-
-    Route::middleware('role:manager')->group(function () {
-        Route::post('/workshops', [WorkshopController::class, 'store']);
-        Route::put('/workshops/{workshop}', [WorkshopController::class, 'update']);
-    });
+    // Registrations
+    Route::get('/registrations', [RegistrationController::class, 'index']);
+    Route::post('/workshops/{id}/registrations', [RegistrationController::class, 'store']);
+    Route::patch('/registrations/{id}/cancel', [RegistrationController::class, 'cancel']);
 });

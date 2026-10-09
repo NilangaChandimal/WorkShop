@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import api from "@/lib/api";
 import { useAuth } from "@/lib/auth";
@@ -22,7 +23,15 @@ function formatDate(iso: string) {
 }
 
 export default function RegistrationHistoryPage() {
-  const { hasRole } = useAuth();
+  const { user, hasRole } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user && user.role === "admin") {
+      router.replace("/403");
+    }
+  }, [user, router]);
+
   const { toast } = useToast();
 
   const [registrations, setRegistrations] = useState<Registration[]>([]);
@@ -46,7 +55,7 @@ export default function RegistrationHistoryPage() {
   const [cancelTarget, setCancelTarget] = useState<Registration | null>(null);
   const [cancelling, setCancelling] = useState(false);
 
-  // Fetch workshop list for dropdown
+  // Load workshops list for the filter dropdown
   useEffect(() => {
     api
       .get<PaginatedResponse<Workshop>>("/workshops", { params: { per_page: 100 } })
@@ -68,7 +77,7 @@ export default function RegistrationHistoryPage() {
             date_from: dateFrom || undefined,
             date_to: dateTo || undefined,
             page,
-            per_page: 20,
+            per_page: 15,
           },
         }
       );
@@ -113,7 +122,7 @@ export default function RegistrationHistoryPage() {
     setCancelling(true);
     try {
       await api.patch(`/registrations/${cancelTarget.id}/cancel`);
-      toast("Registration cancelled successfully. Seat freed.", "success");
+      toast("Registration cancelled successfully. 1 seat has been restored.", "success");
       setCancelTarget(null);
       fetchRegistrations();
     } catch (err) {
@@ -127,8 +136,8 @@ export default function RegistrationHistoryPage() {
     <div>
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-xl font-bold">Registration History</h1>
-          <p className="text-sm text-muted mt-0.5">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Registration History</h1>
+          <p className="text-sm text-slate-500 mt-1">
             Audit and manage all active and cancelled attendee bookings.
           </p>
         </div>
@@ -136,7 +145,7 @@ export default function RegistrationHistoryPage() {
           <button
             type="button"
             onClick={handleResetFilters}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium border border-border hover:bg-surface-hover text-muted hover:text-foreground transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium border border-slate-200 hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-colors"
           >
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
               <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
@@ -148,13 +157,13 @@ export default function RegistrationHistoryPage() {
       </div>
 
       {/* Filters */}
-      <div className="bg-surface border border-border rounded-2xl p-4 mb-6">
+      <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-4 sm:p-5 mb-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
           <input
             placeholder="Search attendee…"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            className="px-3.5 py-2 bg-background border border-border rounded-xl text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"
+            className="px-3.5 py-2 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
           />
           <select
             value={workshopId}
@@ -162,7 +171,7 @@ export default function RegistrationHistoryPage() {
               setWorkshopId(e.target.value);
               setPage(1);
             }}
-            className="px-3.5 py-2 bg-background border border-border rounded-xl text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"
+            className="px-3.5 py-2 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
           >
             <option value="">All Workshops</option>
             {workshops.map((ws) => (
@@ -177,7 +186,7 @@ export default function RegistrationHistoryPage() {
               setStatus(e.target.value);
               setPage(1);
             }}
-            className="px-3.5 py-2 bg-background border border-border rounded-xl text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"
+            className="px-3.5 py-2 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
           >
             <option value="">All Statuses</option>
             <option value="active">Active</option>
@@ -190,7 +199,7 @@ export default function RegistrationHistoryPage() {
               setDateFrom(e.target.value);
               setPage(1);
             }}
-            className="px-3.5 py-2 bg-background border border-border rounded-xl text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"
+            className="px-3.5 py-2 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
           />
           <input
             type="date"
@@ -199,13 +208,13 @@ export default function RegistrationHistoryPage() {
               setDateTo(e.target.value);
               setPage(1);
             }}
-            className="px-3.5 py-2 bg-background border border-border rounded-xl text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"
+            className="px-3.5 py-2 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
           />
           <button
             type="button"
             onClick={handleResetFilters}
             disabled={!hasActiveFilters}
-            className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-sm border border-border hover:bg-surface-hover text-muted hover:text-foreground disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-sm border border-slate-200 hover:bg-slate-50 text-slate-600 hover:text-slate-900 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
@@ -217,14 +226,14 @@ export default function RegistrationHistoryPage() {
       </div>
 
       {error && (
-        <div className="mb-4 bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm px-4 py-3 rounded-xl">
+        <div className="mb-4 bg-rose-50 border border-rose-200 text-rose-700 text-sm px-4 py-3 rounded-xl">
           {error}
         </div>
       )}
 
       {loading ? (
         <div className="flex justify-center py-20">
-          <Spinner className="h-8 w-8" />
+          <Spinner className="h-8 w-8 text-indigo-600" />
         </div>
       ) : registrations.length === 0 ? (
         <EmptyState
@@ -232,38 +241,38 @@ export default function RegistrationHistoryPage() {
           message="No registration records match your filters."
         />
       ) : (
-        <div className="bg-surface border border-border rounded-2xl overflow-hidden shadow-sm">
+        <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="bg-surface-hover/50 border-b border-border text-xs uppercase text-muted tracking-wider">
+              <thead className="bg-slate-50 border-b border-slate-200 text-xs uppercase text-slate-500 font-semibold tracking-wider">
                 <tr>
-                  <th className="px-5 py-3 font-semibold">Attendee</th>
-                  <th className="px-5 py-3 font-semibold">Workshop</th>
-                  <th className="px-5 py-3 font-semibold">Status</th>
-                  <th className="px-5 py-3 font-semibold">Registered</th>
-                  <th className="px-5 py-3 font-semibold">Audit</th>
-                  <th className="px-5 py-3 font-semibold text-right">Action</th>
+                  <th className="px-5 py-3.5">Attendee</th>
+                  <th className="px-5 py-3.5">Workshop</th>
+                  <th className="px-5 py-3.5">Status</th>
+                  <th className="px-5 py-3.5">Registered</th>
+                  <th className="px-5 py-3.5">Audit</th>
+                  <th className="px-5 py-3.5 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border">
+              <tbody className="divide-y divide-slate-100">
                 {registrations.map((reg) => (
-                  <tr key={reg.id} className="hover:bg-surface-hover/30 transition-colors">
-                    <td className="px-5 py-3.5">
-                      <div className="font-medium text-foreground">{reg.attendee_name}</div>
-                      <div className="text-xs text-muted">{reg.attendee_email}</div>
+                  <tr key={reg.id} className="hover:bg-slate-50/70 transition-colors">
+                    <td className="px-5 py-4">
+                      <div className="font-semibold text-slate-900">{reg.attendee_name}</div>
+                      <div className="text-xs text-slate-500">{reg.attendee_email}</div>
                     </td>
-                    <td className="px-5 py-3.5">
+                    <td className="px-5 py-4">
                       <div className="flex items-center gap-1.5 flex-wrap">
                         {reg.workshop?.code && (
-                          <span className="px-1.5 py-0.5 rounded bg-primary/10 text-primary text-[10px] font-mono font-medium">
+                          <span className="px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-100 font-mono text-[10px] font-semibold">
                             {reg.workshop.code}
                           </span>
                         )}
-                        <span className="font-medium text-foreground">
+                        <span className="font-medium text-slate-900">
                           {reg.workshop?.title ?? `#${reg.workshop_id}`}
                         </span>
                       </div>
-                      <div className="text-xs text-muted mt-0.5 space-y-0.5">
+                      <div className="text-xs text-slate-500 mt-1 space-y-0.5">
                         {reg.workshop?.instructor && (
                           <p>Instructor: {reg.workshop.instructor}</p>
                         )}
@@ -272,38 +281,38 @@ export default function RegistrationHistoryPage() {
                         )}
                       </div>
                     </td>
-                    <td className="px-5 py-3.5">
+                    <td className="px-5 py-4">
                       <Badge variant={reg.status === "active" ? "success" : "danger"}>
                         {reg.status}
                       </Badge>
                     </td>
-                    <td className="px-5 py-3.5 text-xs text-muted">
-                      <div>{formatDate(reg.created_at)}</div>
+                    <td className="px-5 py-4 text-xs text-slate-500">
+                      <div className="font-medium text-slate-700">{formatDate(reg.created_at)}</div>
                       {reg.registered_by && (
-                        <div className="text-[11px] text-muted/80">
+                        <div className="text-[11px] text-slate-400 mt-0.5">
                           by {reg.registered_by.name}
                         </div>
                       )}
                     </td>
-                    <td className="px-5 py-3.5 text-xs text-muted">
+                    <td className="px-5 py-4 text-xs text-slate-500">
                       {reg.status === "cancelled" ? (
                         <div>
-                          <div>Cancelled: {reg.cancelled_at ? formatDate(reg.cancelled_at) : "Yes"}</div>
+                          <div className="text-rose-600 font-medium">Cancelled: {reg.cancelled_at ? formatDate(reg.cancelled_at) : "Yes"}</div>
                           {reg.cancelled_by && (
-                            <div className="text-[11px] text-muted/80">
+                            <div className="text-[11px] text-slate-400 mt-0.5">
                               by {reg.cancelled_by.name}
                             </div>
                           )}
                         </div>
                       ) : (
-                        <span className="text-muted/60">—</span>
+                        <span className="text-slate-300">—</span>
                       )}
                     </td>
-                    <td className="px-5 py-3.5 text-right">
+                    <td className="px-5 py-4 text-right">
                       {reg.status === "active" && hasRole("manager", "staff") && (
                         <button
                           onClick={() => setCancelTarget(reg)}
-                          className="px-2.5 py-1 text-xs rounded-lg border border-danger/30 text-danger hover:bg-danger/10 transition-colors"
+                          className="px-3 py-1.5 text-xs rounded-xl font-medium border border-rose-200 text-rose-700 hover:bg-rose-50 transition-colors"
                         >
                           Cancel
                         </button>
@@ -317,25 +326,25 @@ export default function RegistrationHistoryPage() {
 
           {/* Pagination */}
           {meta && meta.last_page > 1 && (
-            <div className="flex items-center justify-between px-5 py-3 border-t border-border">
-              <span className="text-xs text-muted">
+            <div className="flex items-center justify-between px-5 py-3.5 border-t border-slate-200 bg-slate-50/50">
+              <span className="text-xs text-slate-500 font-medium">
                 Showing {meta.from ?? 0} to {meta.to ?? 0} of {meta.total} records
               </span>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="px-2.5 py-1 text-xs rounded-lg border border-border hover:bg-surface-hover disabled:opacity-40 transition-colors"
+                  className="px-3 py-1 text-xs rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 disabled:opacity-40 transition-colors shadow-xs"
                 >
                   ← Prev
                 </button>
-                <span className="text-xs text-muted">
+                <span className="text-xs text-slate-500 font-medium px-1">
                   {meta.current_page} / {meta.last_page}
                 </span>
                 <button
                   onClick={() => setPage((p) => Math.min(meta.last_page, p + 1))}
                   disabled={page === meta.last_page}
-                  className="px-2.5 py-1 text-xs rounded-lg border border-border hover:bg-surface-hover disabled:opacity-40 transition-colors"
+                  className="px-3 py-1 text-xs rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 disabled:opacity-40 transition-colors shadow-xs"
                 >
                   Next →
                 </button>

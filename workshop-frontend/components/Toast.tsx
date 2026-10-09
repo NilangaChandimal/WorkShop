@@ -44,10 +44,10 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             key={t.id}
             className={`${t.exiting ? "toast-exit" : "toast-enter"} px-4 py-3 rounded-xl shadow-lg border backdrop-blur-sm text-sm font-medium ${
               t.type === "success"
-                ? "bg-green-50 border-green-200 text-green-800 dark:bg-green-950/80 dark:border-green-800 dark:text-green-200"
+                ? "bg-emerald-50 border-emerald-200 text-emerald-800"
                 : t.type === "error"
-                  ? "bg-red-50 border-red-200 text-red-800 dark:bg-red-950/80 dark:border-red-800 dark:text-red-200"
-                  : "bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-950/80 dark:border-blue-800 dark:text-blue-200"
+                  ? "bg-rose-50 border-rose-200 text-rose-800"
+                  : "bg-indigo-50 border-indigo-200 text-indigo-800"
             }`}
           >
             {t.message}

@@ -1,15 +1,12 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { useRouter } from "next/navigation";
-import { AuthProvider, useAuth } from "@/lib/auth";
+import api from "@/lib/api";
 import { getErrorMessage } from "@/lib/errors";
 import Spinner from "@/components/Spinner";
+import type { User } from "@/lib/types";
 
 function LoginForm() {
-  const { login } = useAuth();
-  const router = useRouter();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -21,19 +18,17 @@ function LoginForm() {
     setLoading(true);
 
     try {
-      const user = await login(email, password);
+      const { data } = await api.post("/login", { email, password });
+      const token = data.token;
+      const user: User = data.user.data ?? data.user;
 
-      // Inspect role and navigate accordingly
-      if (user.role === "admin") {
-        router.push("/admin/users");
-      } else if (user.role === "manager" || user.role === "staff") {
-        router.push("/dashboard");
-      } else {
-        router.push("/dashboard");
-      }
+      localStorage.setItem("auth_token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("auth_user", JSON.stringify(user));
+
+      window.location.href = user.role === "admin" ? "/admin/users" : "/dashboard";
     } catch (err) {
       setError(getErrorMessage(err));
-    } finally {
       setLoading(false);
     }
   }
@@ -158,9 +153,5 @@ function LoginForm() {
 }
 
 export default function LoginPage() {
-  return (
-    <AuthProvider>
-      <LoginForm />
-    </AuthProvider>
-  );
+  return <LoginForm />;
 }

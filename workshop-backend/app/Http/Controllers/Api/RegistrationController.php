@@ -49,23 +49,35 @@ class RegistrationController extends Controller
         return RegistrationResource::collection($registrations);
     }
 
-    public function store(StoreRegistrationRequest $request, Workshop $workshop): JsonResponse
+    public function store(StoreRegistrationRequest $request, Workshop|int|string $workshop = null, $id = null): JsonResponse
     {
+        $model = ($workshop instanceof Workshop) ? $workshop : null;
+        if (! $model) {
+            $val = $workshop ?? $id;
+            $model = Workshop::findOrFail($val);
+        }
+
         Gate::authorize('create', Registration::class);
 
-        $registration = $this->registrations->register($workshop, $request->validated(), $request->user());
+        $registration = $this->registrations->register($model, $request->validated(), $request->user());
 
         return (new RegistrationResource($registration))
             ->response()
             ->setStatusCode(Response::HTTP_CREATED);
     }
 
-    public function cancel(Request $request, Registration $registration): RegistrationResource
+    public function cancel(Request $request, Registration|int|string $registration = null, $id = null): RegistrationResource
     {
-        Gate::authorize('cancel', $registration);
+        $model = ($registration instanceof Registration) ? $registration : null;
+        if (! $model) {
+            $val = $registration ?? $id;
+            $model = Registration::findOrFail($val);
+        }
+
+        Gate::authorize('cancel', $model);
 
         return new RegistrationResource(
-            $this->registrations->cancel($registration, $request->user())
+            $this->registrations->cancel($model, $request->user())
         );
     }
 }

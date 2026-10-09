@@ -37,6 +37,12 @@ class WorkshopTest extends TestCase
             'status' => 'active',
         ]);
 
+        // Past/expired workshop with 0 attendees (unregistered capacity)
+        Workshop::factory()->past()->create([
+            'title' => 'Expired Past Workshop',
+            'capacity' => 10,
+        ]);
+
         // Search test
         $searchResponse = $this->getJson('/api/workshops?search=React');
         $searchResponse->assertOk()

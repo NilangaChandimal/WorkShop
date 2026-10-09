@@ -72,14 +72,14 @@ export default function BookingModal({
       title={`Book a Seat — ${workshop?.title ?? ""}`}
     >
       {error && (
-        <div className="mb-4 bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm px-4 py-3 rounded-xl">
+        <div className="mb-4 bg-rose-50 border border-rose-200 text-rose-700 text-sm px-4 py-3 rounded-xl">
           {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="bk-name" className="block text-sm font-medium mb-1">
+          <label htmlFor="bk-name" className="block text-sm font-medium text-slate-700 mb-1">
             Attendee Name
           </label>
           <input
@@ -87,12 +87,12 @@ export default function BookingModal({
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full px-3.5 py-2.5 bg-background border border-border rounded-xl text-sm placeholder:text-muted/60 focus:border-primary focus:ring-1 focus:ring-primary"
+            className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
             placeholder="John Smith"
           />
         </div>
         <div>
-          <label htmlFor="bk-email" className="block text-sm font-medium mb-1">
+          <label htmlFor="bk-email" className="block text-sm font-medium text-slate-700 mb-1">
             Attendee Email
           </label>
           <input
@@ -101,7 +101,7 @@ export default function BookingModal({
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-3.5 py-2.5 bg-background border border-border rounded-xl text-sm placeholder:text-muted/60 focus:border-primary focus:ring-1 focus:ring-primary"
+            className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
             placeholder="john@example.com"
           />
         </div>
@@ -113,16 +113,16 @@ export default function BookingModal({
               reset();
               onClose();
             }}
-            className="px-4 py-2 text-sm rounded-xl border border-border hover:bg-surface-hover transition-colors"
+            className="px-4 py-2 text-sm rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 transition-colors"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="flex items-center gap-2 px-5 py-2 text-sm rounded-xl font-medium bg-primary hover:bg-primary-hover text-primary-text shadow-sm shadow-primary/20 transition-colors disabled:opacity-60"
+            className="flex items-center gap-2 px-5 py-2 text-sm rounded-xl font-medium bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm shadow-indigo-600/20 transition-colors disabled:opacity-60"
           >
-            {loading && <Spinner className="h-4 w-4" />}
+            {loading && <Spinner className="h-4 w-4 text-white" />}
             {loading ? "Booking…" : "Book Seat"}
           </button>
         </div>

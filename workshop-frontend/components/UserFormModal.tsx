@@ -96,13 +96,13 @@ export default function UserFormModal({
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
-          <div className="bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-xs px-3.5 py-2.5 rounded-xl">
+          <div className="bg-rose-50 border border-rose-200 text-rose-700 text-xs px-3.5 py-2.5 rounded-xl">
             {error}
           </div>
         )}
 
         <div>
-          <label className="block text-xs font-medium text-muted mb-1">
+          <label className="block text-xs font-medium text-slate-700 mb-1">
             Full Name *
           </label>
           <input
@@ -111,12 +111,12 @@ export default function UserFormModal({
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Jane Doe"
-            className="w-full px-3.5 py-2 bg-background border border-border rounded-xl text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"
+            className="w-full px-3.5 py-2 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-muted mb-1">
+          <label className="block text-xs font-medium text-slate-700 mb-1">
             Email Address *
           </label>
           <input
@@ -125,12 +125,12 @@ export default function UserFormModal({
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="jane@example.com"
-            className="w-full px-3.5 py-2 bg-background border border-border rounded-xl text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"
+            className="w-full px-3.5 py-2 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-muted mb-1">
+          <label className="block text-xs font-medium text-slate-700 mb-1">
             {mode === "create" ? "Password * (min 8 chars)" : "New Password (leave blank to keep current)"}
           </label>
           <input
@@ -140,18 +140,18 @@ export default function UserFormModal({
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder={mode === "create" ? "••••••••" : "Leave blank to keep"}
-            className="w-full px-3.5 py-2 bg-background border border-border rounded-xl text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"
+            className="w-full px-3.5 py-2 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-muted mb-1">
+          <label className="block text-xs font-medium text-slate-700 mb-1">
             Role *
           </label>
           <select
             value={role}
             onChange={(e) => setRole(e.target.value as "admin" | "manager" | "staff")}
-            className="w-full px-3.5 py-2 bg-background border border-border rounded-xl text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"
+            className="w-full px-3.5 py-2 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
           >
             <option value="staff">Staff (View workshops & register attendees)</option>
             <option value="manager">Manager (Create/manage workshops & bookings)</option>
@@ -160,30 +160,30 @@ export default function UserFormModal({
         </div>
 
         <div className="pt-2">
-          <label className="flex items-center gap-2 cursor-pointer text-sm">
+          <label className="flex items-center gap-2 cursor-pointer text-sm text-slate-700">
             <input
               type="checkbox"
               checked={isActive}
               onChange={(e) => setIsActive(e.target.checked)}
-              className="rounded accent-primary"
+              className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 accent-indigo-600"
             />
             <span>Active Account (can log in)</span>
           </label>
         </div>
 
-        <div className="flex justify-end gap-3 pt-3 border-t border-border">
+        <div className="flex justify-end gap-3 pt-3 border-t border-slate-200">
           <button
             type="button"
             onClick={onClose}
             disabled={loading}
-            className="px-4 py-2 text-sm rounded-xl border border-border hover:bg-surface-hover transition-colors"
+            className="px-4 py-2 text-sm rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 transition-colors"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="px-4 py-2 text-sm rounded-xl font-medium bg-primary hover:bg-primary-hover text-white transition-colors disabled:opacity-50"
+            className="px-5 py-2 text-sm rounded-xl font-medium bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm shadow-indigo-600/20 transition-colors disabled:opacity-50"
           >
             {loading ? "Saving…" : mode === "create" ? "Create User" : "Save Changes"}
           </button>

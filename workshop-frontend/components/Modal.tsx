@@ -42,13 +42,13 @@ export default function Modal({
       onClick={(e) => e.target === overlayRef.current && onClose()}
     >
       <div
-        className={`modal-content w-full ${maxWidth} bg-surface border border-border rounded-2xl shadow-2xl`}
+        className={`modal-content w-full ${maxWidth} bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden`}
       >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
-          <h2 className="text-lg font-semibold">{title}</h2>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 bg-slate-50/50">
+          <h2 className="text-lg font-bold text-slate-900">{title}</h2>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-surface-hover text-muted transition-colors"
+            className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors"
             aria-label="Close"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -56,7 +56,7 @@ export default function Modal({
             </svg>
           </button>
         </div>
-        <div className="px-6 py-5">{children}</div>
+        <div className="px-6 py-5 bg-white">{children}</div>
       </div>
     </div>
   );

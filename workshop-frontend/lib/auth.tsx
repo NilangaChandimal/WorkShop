@@ -31,7 +31,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const storedToken = localStorage.getItem("auth_token");
-    const storedUser = localStorage.getItem("auth_user");
+    const storedUser =
+      localStorage.getItem("user") || localStorage.getItem("auth_user");
 
     if (storedToken && storedUser) {
       try {
@@ -39,33 +40,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(JSON.parse(storedUser));
       } catch {
         localStorage.removeItem("auth_token");
+        localStorage.removeItem("user");
         localStorage.removeItem("auth_user");
       }
     }
     setIsLoading(false);
   }, []);
 
-  const login = useCallback(
-    async (email: string, password: string) => {
-      const { data } = await api.post("/login", { email, password });
-      const newToken = data.token;
-      const newUser: User = data.user.data ?? data.user;
+  const login = useCallback(async (email: string, password: string) => {
+    const { data } = await api.post("/login", { email, password });
+    const newToken = data.token;
+    const newUser: User = data.user.data ?? data.user;
 
-      localStorage.setItem("auth_token", newToken);
-      localStorage.setItem("auth_user", JSON.stringify(newUser));
-      setToken(newToken);
-      setUser(newUser);
+    localStorage.setItem("auth_token", newToken);
+    localStorage.setItem("user", JSON.stringify(newUser));
+    localStorage.setItem("auth_user", JSON.stringify(newUser));
+    setToken(newToken);
+    setUser(newUser);
 
-      if (newUser.role === "admin") {
-        router.push("/admin/users");
-      } else {
-        router.push("/dashboard");
-      }
+    window.location.href =
+      newUser.role === "admin" ? "/admin/users" : "/dashboard";
 
-      return newUser;
-    },
-    [router]
-  );
+    return newUser;
+  }, []);
 
   const logout = useCallback(async () => {
     try {
@@ -74,11 +71,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // ignore
     }
     localStorage.removeItem("auth_token");
+    localStorage.removeItem("user");
     localStorage.removeItem("auth_user");
     setToken(null);
     setUser(null);
-    router.push("/login");
-  }, [router]);
+    window.location.href = "/login";
+  }, []);
 
   const hasRole = useCallback(
     (...roles: string[]) => !!user && roles.includes(user.role),
